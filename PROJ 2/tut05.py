@@ -3,19 +3,19 @@ from openpyxl import Workbook
 import os
 def generate_marksheet():
     nameRollMapping = {}
-    with open('names-roll.csv','r') as namesRollFile:
+    with open('sample_input/names-roll.csv','r') as namesRollFile:
         reader = csv.DictReader(namesRollFile)
         for row in reader:
             nameRollMapping[row['Roll']] = row['Name']
     subjectMapping = {}
-    with open('subjects_master.csv','r') as subject_master:
+    with open('sample_input/subjects_master.csv','r') as subject_master:
         reader = csv.DictReader(subject_master)
         for row in reader:
             subjectMapping[row['subno']] = [row['subname'],row['crd'],row['ltp']]
     # print(subjectMapping)
     gradeswithsem ={}
     rolls = []
-    with open('grades.csv','r') as gradesFile:
+    with open('sample_input/grades.csv','r') as gradesFile:
         reader = csv.DictReader(gradesFile)
         for row in reader:
             if row['Roll'] in rolls:
@@ -84,7 +84,9 @@ def generate_marksheet():
                 overalldata[key].append(semdata)
             loopno = loopno+1
     
+    print(gradeswithsem)
     # print(overalldata)
+    return
     for key in gradeswithsem:
         stud_name = key
         file_name = "output/"+ stud_name+".xlsx"
