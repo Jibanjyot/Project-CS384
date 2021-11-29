@@ -258,7 +258,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     line_height = 10
     pdf.x = 15
     top = pdf.y
-    pdf.cell(175, 21, '', 1, 1, 'C')
+    pdf.cell(175, 23, '', 1, 1, 'C')
     pdf.y = top
     pdf.set_font('Arial', '', 7)
     for row in stud_info:
@@ -277,9 +277,9 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
                 col_width = 28
             if col_no == 6:
                 col_width = 13
-            pdf.multi_cell(col_width, 15, datum, border=0, ln=3, max_line_height=pdf.font_size)
+            pdf.multi_cell(col_width, line_height, datum, border=0, ln=3, max_line_height=pdf.font_size)
             col_no = col_no + 1
-        pdf.ln(8)
+        pdf.ln(line_height)
 
         #----------------------------------------------------------#
     xcoord = pdf.x
@@ -289,8 +289,6 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     offset_y = 85
     for key in transcript_data:
         sem_table_list = []
-        if len(transcript_data[key]) ==0:
-            break
         if key == "5":
             break
         if key == "3" :
@@ -298,7 +296,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
             ycoord = pdf.y
             pdf.x = xcoord
             offset = 3
-        sem_table_list.append(["","Sub Code","Subject Name","L-T-P","CRD","Sub Type","GRD"])
+
         for subject_wise_data in transcript_data[key]:
             sem_table_list.append(subject_wise_data)
         # print(sem_table_list)
@@ -313,8 +311,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
             i = 1
             
             pdf.x = pdf.x+offset
-            tmp = [row[1],row[2],row[3],row[4],row[6]]
-            for datum in tmp:
+            for datum in row[1:]:
                 if i == 1:
                     cell_width = 9
                 if i == 2:
@@ -360,7 +357,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     pdf.x = 150
     pdf.y = 240
     pdf.cell(20, 10,"Assistant Registrar (Academic)", 0, 1, 'C')
-    file_name = "output/"+str(rollno)+".pdf"
+    file_name = str(rollno)+".pdf"
     pdf.output(file_name)
 
 

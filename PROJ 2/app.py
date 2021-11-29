@@ -128,7 +128,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     line_height = 10
     pdf.x = 15
     top = pdf.y
-    pdf.cell(175, 23, '', 1, 1, 'C')
+    pdf.cell(175, 21, '', 1, 1, 'C')
     pdf.y = top
     pdf.set_font('Arial', '', 7)
     for row in stud_info:
@@ -147,9 +147,9 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
                 col_width = 28
             if col_no == 6:
                 col_width = 13
-            pdf.multi_cell(col_width, line_height, datum, border=0, ln=3, max_line_height=pdf.font_size)
+            pdf.multi_cell(col_width, 15, datum, border=0, ln=3, max_line_height=pdf.font_size)
             col_no = col_no + 1
-        pdf.ln(line_height)
+        pdf.ln(8)
 
         #----------------------------------------------------------#
     xcoord = pdf.x
@@ -168,7 +168,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
             ycoord = pdf.y
             pdf.x = xcoord
             offset = 3
-
+        sem_table_list.append(["","Sub Code","Subject Name","L-T-P","CRD","Sub Type","GRD"])
         for subject_wise_data in transcript_data[key]:
             sem_table_list.append(subject_wise_data)
         # print(sem_table_list)
@@ -179,11 +179,13 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
         pdf.set_font('Arial', 'BU', 6)
         pdf.cell(20, 10,sem_name, 0, 1, 'C')
         pdf.ln(1)
+        row_no = 1
         for row in sem_table_list[:-1]:
             i = 1
             
             pdf.x = pdf.x+offset
-            for datum in row[1:]:
+            tmp = [row[1],row[2],row[3],row[4],row[6]]
+            for datum in tmp:
                 if i == 1:
                     cell_width = 9
                 if i == 2:
@@ -195,10 +197,12 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
                 if i == 5:
                     cell_width = 9
                 pdf.set_font('Arial', '', 5)
-                
+                if row_no == 1:
+                    pdf.set_font('Arial', 'B', 7)
                 pdf.multi_cell(cell_width, 7, datum, border=1, ln=3, max_line_height=pdf.font_size)
                 i=i+1
             pdf.ln(7)
+            row_no = row_no+1
         i=1
         # print(sem_table_list[-1])
         pdf.x = pdf.x+offset
@@ -225,6 +229,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     pdf.y = 240
     pdf.image("SEAL.PNG",x = 80, y = 235, w = 35, h = 25)
 
+    pdf.image("SIGNATURE.PNG",x = 150, y = 233, w = 35, h = 25)
 
     pdf.x = 150
     pdf.y = 240
