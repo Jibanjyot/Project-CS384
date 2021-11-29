@@ -54,7 +54,7 @@ def send_mail(roll,email):
     s.starttls()
     
     # Authentication
-    s.login(fromaddr, "Amisha1974")
+    s.login(fromaddr, "")
     
     # Converts the Multipart msg into a string
     text = msg.as_string()
