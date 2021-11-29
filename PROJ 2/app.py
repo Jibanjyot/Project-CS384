@@ -77,7 +77,7 @@ with open('sample_input/subjects_master.csv','r') as subject_master:
                 cpi = (cpi*tot_cred+spi*tot_sem_cred)/(tot_cred+tot_sem_cred)
                 semdata[4] = round(cpi,2)
                 tot_cred = tot_cred+tot_sem_cred
-                semdata[3] = tot_cred
+                semdata[3] = tot_sem_cred
                 spi = numerator/tot_sem_cred
                 
                 semdata[2] = round(spi,2)
@@ -98,7 +98,7 @@ with open('sample_input/subjects_master.csv','r') as subject_master:
                 cpi = (cpi*tot_cred+spi*tot_sem_cred)/(tot_cred+tot_sem_cred)
                 semdata[4] = round(cpi,2)
                 tot_cred = tot_cred+tot_sem_cred
-                semdata[3] = tot_cred
+                semdata[3] = tot_sem_cred
                 spi = numerator/tot_sem_cred
                 semdata[2] = round(spi,2)
                 semdata[0] = sem
@@ -254,7 +254,7 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
     line_height = 10
     pdf.x = 50
     top = pdf.y
-    pdf.cell(215, 23, '', 1, 1, 'C')
+    pdf.cell(215, 21, '', 1, 1, 'C')
     pdf.y = top
 
     for row in stud_info:
@@ -273,9 +273,9 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
                 col_width = 35
             if col_no == 6:
                 col_width = 20
-            pdf.multi_cell(col_width, line_height, datum, border=0, ln=3, max_line_height=pdf.font_size)
+            pdf.multi_cell(col_width, 15, datum, border=0, ln=3, max_line_height=pdf.font_size)
             col_no = col_no + 1
-        pdf.ln(line_height)
+        pdf.ln(8)
 
         #----------------------------------------------------------#
     xcoord = pdf.x
@@ -283,10 +283,12 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
     ycoord = pdf.y
     offset = 3
     offset_y = 100
+    
     for key in transcript_data:
         if len(transcript_data[key]) ==0:
             break
         sem_table_list = []
+        
         if key == "9":
             break
         if key == "4" or key == "7":
@@ -294,7 +296,7 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
             ycoord = pdf.y
             pdf.x = xcoord
             offset = 3
-
+        sem_table_list.append(["","Sub Code","Subject Name","L-T-P","CRD","Sub Type","GRD"])
         for subject_wise_data in transcript_data[key]:
             sem_table_list.append(subject_wise_data)
         # print(sem_table_list)
@@ -305,13 +307,17 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
         pdf.set_font('Arial', 'BU', 6)
         pdf.cell(20, 10,sem_name, 0, 1, 'C')
         pdf.ln(1)
+        row_no =1
         for row in sem_table_list[:-1]:
             i = 1
             
             pdf.x = pdf.x+offset
-            for datum in row[1:]:
+            # print(row)
+            tmp = [row[1],row[2],row[3],row[4],row[6]]
+            # print(tmp)
+            for datum in tmp:
                 if i == 1:
-                    cell_width = 9
+                    cell_width = 13
                 if i == 2:
                     cell_width = 40
                 if i == 3:
@@ -320,11 +326,13 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
                     cell_width = 9
                 if i == 5:
                     cell_width = 9
-                pdf.set_font('Arial', '', 5)
-                
-                pdf.multi_cell(cell_width, line_height, datum, border=1, ln=3, max_line_height=pdf.font_size)
+                pdf.set_font('Arial', '', 6.5)
+                if row_no == 1:
+                    pdf.set_font('Arial', 'B', 7)
+                pdf.multi_cell(cell_width, 7, datum, border=1, ln=3, max_line_height=pdf.font_size)
                 i=i+1
-            pdf.ln(line_height)
+            row_no = row_no+1
+            pdf.ln(7)
         i=1
         # print(sem_table_list[-1])
         pdf.x = pdf.x+offset
