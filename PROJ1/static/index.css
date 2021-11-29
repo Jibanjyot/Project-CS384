@@ -1,0 +1,28 @@
+.main{
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   align-items: center; 
+   height: 700px;
+}
+h3{
+    margin: 15px;
+}
+.master{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.response{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.button{
+    margin: 10px;
+    background-color: aqua;
+}
+.button:hover{
+    background-color: blue;
+    color: cornsilk;
+}

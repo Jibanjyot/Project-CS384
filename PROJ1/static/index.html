@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.plot.ly/plotly-2.3.0.min.js"></script>
+    <title>Marksheet Generator</title>
+  </head>
+  <body>
+    <script>
+       function runScript(){
+         var x = document.getElementById("masterFile").files[0];
+         var y = document.getElementById("responseFile").files[0];
+         var pmarks=document.getElementById("pmarks").value
+         var nmarks=document.getElementById("nmarks").value
+         console.log(x)
+         const XHR = new XMLHttpRequest(),
+         FD  = new FormData();
+         FD.append('masterFile',x)
+         FD.append('responseFile',y)
+         FD.append('pmarks',pmarks)
+         FD.append('nmarks',nmarks)
+         XHR.open( 'POST', 'http://127.0.0.1:5000/file-upload' );
+
+         // Send our FormData object; HTTP headers are set automatically
+         XHR.send(FD);
+         XHR.onload = function(){
+             console.log(XHR.response)
+             alert("Marksheets are created!")
+         }
+       }
+       function generateConcise(){
+        var pmarks=document.getElementById("pmarks").value
+        var nmarks=document.getElementById("nmarks").value
+        const XHR = new XMLHttpRequest(),
+        FD  = new FormData();
+        FD.append('pmarks',pmarks)
+        FD.append('nmarks',nmarks)
+        XHR.open( 'POST', 'http://127.0.0.1:5000/concise' );
+
+        // Send our FormData object; HTTP headers are set automatically
+        XHR.send(FD);
+        XHR.onload = function(){
+            console.log(XHR.response)
+            alert("Concise Marksheet is created!")
+        }
+      }
+       function sendMails(){
+        const XHR = new XMLHttpRequest(),
+        FD  = new FormData();
+        XHR.open( 'POST', 'http://127.0.0.1:5000/email' );
+
+        // Send our FormData object; HTTP headers are set automatically
+        XHR.send(FD);
+        XHR.onload = function(){
+            console.log(XHR.response)
+            alert('Mails have been sent.')
+        }
+       } 
+    </script>  
+    <div class="main">
+      <h1>Marksheet Generator!</h1>
+      <div class="master">
+        <h3>Master roll</h3>
+        <input id="masterFile" type="file" />
+      </div>
+      <div class="response">
+        <h3>Response csv</h3>
+        <input id="responseFile" type="file" />
+      </div>
+
+      <div class="marks">
+        <h3>Positive marks</h3>
+        <input id="pmarks" type="number" />
+        <h3>Negative marks</h3>
+        <input id="nmarks" type="number" />
+      </div>
+      <div class="buttons">
+        <button class="button" onclick="runScript()">Roll no wise Marksheet</button>
+        <button class="button" onclick="generateConcise()">Concise marksheet</button>
+        <button class="button" onclick="sendMails()">Send mail</button>
+      </div>
+    </div>
+  </body>
+</html>
