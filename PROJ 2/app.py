@@ -4,6 +4,10 @@ import csv
 import datetime
 from fpdf import FPDF
 
+
+
+course_map = {'CS': 'Computer Science and Engineering','ME': 'Mechanical Engineering','EE': 'Electrical Engineering','CE': 'Civil Engineering','CBE': 'Chemical Science and Biotechnology','MME': 'Metallugical Engineering'}
+programme_map = { '01': 'Bachelor of Technology', '11': 'Masters of Technology' , '12' : 'Masters of Science', '21':'Phd'}
 nestedDict={}
 nameRollMapping = {}
 with open('sample_input/names-roll.csv','r') as namesRollFile:
@@ -138,7 +142,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
             if col_no == 1:
                 col_width = 19
             if col_no == 2:
-                col_width = 43
+                col_width = 53
             if col_no == 3:
                 col_width = 13
             if col_no == 4:
@@ -155,19 +159,19 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     xcoord = pdf.x
     pdf.y = pdf.y-13
     ycoord = pdf.y
-    offset = 3
+    offset = 6
     offset_y = 85
     for key in transcript_data:
         sem_table_list = []
         if len(transcript_data[key]) ==0:
             break
-        if key == "5":
-            break
+        # if key == "5":
+        #     break
         if key == "3" :
             pdf.y = pdf.y + offset_y
             ycoord = pdf.y
             pdf.x = xcoord
-            offset = 3
+            offset = 6
         sem_table_list.append(["","Sub Code","Subject Name","L-T-P","CRD","Sub Type","GRD"])
         for subject_wise_data in transcript_data[key]:
             sem_table_list.append(subject_wise_data)
@@ -199,9 +203,9 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
                 pdf.set_font('Arial', '', 5)
                 if row_no == 1:
                     pdf.set_font('Arial', 'B', 7)
-                pdf.multi_cell(cell_width, 7, datum, border=1, ln=3, max_line_height=pdf.font_size)
+                pdf.multi_cell(cell_width, 6, datum, border=1,align='C' ,ln=3, max_line_height=pdf.font_size)
                 i=i+1
-            pdf.ln(7)
+            pdf.ln(6)
             row_no = row_no+1
         i=1
         # print(sem_table_list[-1])
@@ -221,7 +225,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     today = today.strftime("%d %b %Y, %H:%M")
     today = "Date Generated: "+str(today)
     pdf.x = 30
-    pdf.y = 240
+    pdf.y = 250
     pdf.set_font('Arial', '', 9)
     pdf.cell(20, 10,today, 0, 1, 'C')
 
@@ -229,10 +233,10 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     pdf.y = 240
     pdf.image("SEAL.PNG",x = 80, y = 235, w = 35, h = 25)
 
-    pdf.image("SIGNATURE.PNG",x = 150, y = 233, w = 35, h = 25)
+    pdf.image("SIGNATURE.PNG",x = 150, y = 225, w = 35, h = 25)
 
     pdf.x = 150
-    pdf.y = 240
+    pdf.y = 250
     pdf.cell(20, 10,"Assistant Registrar (Academic)", 0, 1, 'C')
     file_name = "output/"+str(rollno)+".pdf"
     pdf.output(file_name)
@@ -273,12 +277,12 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
             if col_no == 3:
                 col_width = 20
             if col_no == 4:
-                col_width = 50
+                col_width = 60
             if col_no == 5:
                 col_width = 35
             if col_no == 6:
                 col_width = 20
-            pdf.multi_cell(col_width, 15, datum, border=0, ln=3, max_line_height=pdf.font_size)
+            pdf.multi_cell(col_width, 15, datum, border=0, ln=3, max_line_height=pdf.font_size+1)
             col_no = col_no + 1
         pdf.ln(8)
 
@@ -286,7 +290,7 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
     xcoord = pdf.x
     pdf.y = pdf.y-13
     ycoord = pdf.y
-    offset = 3
+    offset = 8
     offset_y = 100
     
     for key in transcript_data:
@@ -300,7 +304,7 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
             pdf.y = pdf.y + offset_y
             ycoord = pdf.y
             pdf.x = xcoord
-            offset = 3
+            offset = 8
         sem_table_list.append(["","Sub Code","Subject Name","L-T-P","CRD","Sub Type","GRD"])
         for subject_wise_data in transcript_data[key]:
             sem_table_list.append(subject_wise_data)
@@ -334,7 +338,7 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
                 pdf.set_font('Arial', '', 6.5)
                 if row_no == 1:
                     pdf.set_font('Arial', 'B', 7)
-                pdf.multi_cell(cell_width, 7, datum, border=1, ln=3, max_line_height=pdf.font_size)
+                pdf.multi_cell(cell_width, 7, datum, border=1,align='C', ln=3, max_line_height=pdf.font_size)
                 i=i+1
             row_no = row_no+1
             pdf.ln(7)
@@ -420,8 +424,8 @@ else:
         print(roll)
         if(isBtech(roll)):
             # generate_mtechphd_marksheet(nestedDict['0401CS01'],'1901ME29','Jibanjyoti Kalita','2020','Master of Technology','Mechanical Engineering')
-            generate_btech_marksheet(nestedDict[roll],roll,nameRollMapping[roll],'2020','Bachelors of Technology',roll[4:6])
+            generate_btech_marksheet(nestedDict[roll],roll,nameRollMapping[roll],"20"+str(roll[:2]),'Bachelors of Technology',course_map[roll[4:6]])
         else:
-            generate_mtechphd_marksheet(nestedDict[roll],roll,nameRollMapping[roll],'2020','Masters of Technology',roll[4:6])
+            generate_mtechphd_marksheet(nestedDict[roll],roll,nameRollMapping[roll],"20"+str(roll[:2]),programme_map[roll[2:4]],course_map[roll[4:6]])
 
 

@@ -4,7 +4,7 @@ from openpyxl.drawing.image import Image
 from openpyxl.styles import Border, Side, PatternFill, Font, GradientFill, Alignment
 from openpyxl.styles.colors import BLACK, BLUE
 import os
-
+import pandas as pd 
 def generateMarksheets(p_mark,n_mark):
 
     roll_name_mapping = {}
@@ -201,18 +201,108 @@ def generateMarksheets(p_mark,n_mark):
     for i in range(7,len(master_answer_key)):
         concise_sheet_header.append("unnamed: "+str(i))
     concise_sheet_header.append("statusAnswer")
-    with open("marksheets/concise.csv",'w',newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(concise_sheet_header)
-        for row in concise_sheet:
-            writer.writerow(row)
-            print(row)
+    # with open("marksheets/concise.csv",'w',newline='') as f:
+    #     writer = csv.writer(f)
+    #     writer.writerow(concise_sheet_header)
+    #     for row in concise_sheet:
+    #         writer.writerow(row)
+    #         print(row)
 
 
     return    
+
+
+
+def generateconciseMarksheets(p_mark,n_mark):
+
+    roll_name_mapping = {}
+    with open('sample_input/master_roll.csv') as roll_file:
+        responses = csv.DictReader(roll_file)
+        for row in responses:
+            roll_name_mapping[row["roll"]] =row["name"]
+    # print(roll_name_mapping)
+
+    with open('sample_input/responses.csv') as response_file:
+        responses = csv.reader(response_file)
+        response_master_list = []
+        for row in responses:
+            response_master_list.append(row)
+        # print(response_master_list)
+    
+    concise_sheet_header = response_master_list[0][:6].copy()
+    master_answer_key = response_master_list[1]
+    concise_sheet = [response_master_list[0]]
+    # concise_sheet_header = response_master_list[0].copy()
+    response_master_list = response_master_list[1:]
+    # print(master_answer_key)
+    exist_roll_mapping = [i[6] for i in response_master_list]
+    for i in roll_name_mapping.keys():
+        if i not in exist_roll_mapping:
+            temp = master_answer_key
+            temp = ["" for i in temp]
+            temp[3] = roll_name_mapping[i]
+            temp[6] = i
+            response_master_list.append(temp)
+            # print(temp)
+    # print(exist_roll_mapping)
+    
+    for stud_detail in response_master_list:
+        row_number = 16
+        col_number = 1
+        tot_correct = 0
+        tot_wrong = 0
+        tot_not_attempted = 0
+        for i in range(7,len(master_answer_key)):
+            if row_number == 41:
+                row_number = 15
+                col_number = 4
+                row_number=row_number+1
+            if stud_detail[i] == "":
+                tot_not_attempted = tot_not_attempted+1
+            elif stud_detail[i] == master_answer_key[i]:
+                tot_correct=tot_correct+1
+            elif stud_detail[i] != master_answer_key[i]:
+                tot_wrong = tot_wrong+1
+            row_number = row_number+1
+        
+        #input to be taken
+        positive_marks = p_mark
+        negative_marks = n_mark
+        total_positive_marks = tot_correct*positive_marks
+        total_negative_marks = tot_wrong*negative_marks     
+        total_score = total_positive_marks-total_negative_marks
+        # print(total_positive_marks)
+        tot_marks = (len(master_answer_key)-7)*positive_marks
+        temp_list = stud_detail.copy()
+        temp_list.insert(6,str(total_score)+"/"+str(tot_marks))
+        temp_list.append([tot_correct,tot_wrong,tot_not_attempted])
+        concise_sheet.append(temp_list)
+        
+        
+    
+    concise_sheet_header[2] = "Google_Score"
+    concise_sheet_header.insert(6,"Score_After_Negative")
+    for i in range(7,len(master_answer_key)+1):
+        concise_sheet_header.append("unnamed: "+str(i))
+    concise_sheet_header.append("statusAnswer")
+    concise_sheet = concise_sheet[1:]
+    # with open("marksheets/concise.csv",'w',newline='') as f:
+    #     writer = csv.writer(f)
+    #     writer.writerow(concise_sheet_header)
+    #     for row in concise_sheet:
+    #         writer.writerow(row)
+    #         # print(row)
+    concise_sheet = concise_sheet[1:]
+    df = pd.DataFrame(concise_sheet, columns = concise_sheet_header)
+    df.to_csv("marksheets/concise.csv")
+
+    return
+
+
+
 
 try:
     os.mkdir("marksheets")
 except:
     pass
-generateMarksheets(5,1)
+generateconciseMarksheets(5,1)
