@@ -125,14 +125,15 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     pdf.y = top
     pdf.image("IITPLOGO2.PNG",x = xcoord+1, y = top+1, w = 186, h = 30)
     pdf.ln(30)
-
+    pdf.line(10,40,200,40)
     #----------------------------------------------------------#
     stud_info = [["Roll No: ",rollno,"Name: ",name, "Year of Admission: ",yoa], 
                 ["Programme: ",programme,"Course: ",course],"",""]
     line_height = 10
     pdf.x = 15
     top = pdf.y
-    pdf.cell(175, 21, '', 1, 1, 'C')
+    pdf.y = pdf.y+4
+    pdf.cell(175, 15, '', 1, 1, 'C')
     pdf.y = top
     pdf.set_font('Arial', '', 7)
     for row in stud_info:
@@ -160,7 +161,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     pdf.y = pdf.y-13
     ycoord = pdf.y
     offset = 6
-    offset_y = 85
+    offset_y = 83
     for key in transcript_data:
         sem_table_list = []
         if len(transcript_data[key]) ==0:
@@ -180,7 +181,7 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
         pdf.x = pdf.x+offset
         pdf.set_font('Arial',"", 8)
         sem_name = "Semester "+str(key)
-        pdf.set_font('Arial', 'BU', 6)
+        pdf.set_font('Arial', 'BU', 8)
         pdf.cell(20, 10,sem_name, 0, 1, 'C')
         pdf.ln(1)
         row_no = 1
@@ -202,10 +203,10 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
                     cell_width = 9
                 pdf.set_font('Arial', '', 5)
                 if row_no == 1:
-                    pdf.set_font('Arial', 'B', 7)
-                pdf.multi_cell(cell_width, 6, datum, border=1,align='C' ,ln=3, max_line_height=pdf.font_size)
+                    pdf.set_font('Arial', 'B', 6)
+                pdf.multi_cell(cell_width, 5, datum, border=1,align='C' ,ln=3, max_line_height=pdf.font_size)
                 i=i+1
-            pdf.ln(6)
+            pdf.ln(5)
             row_no = row_no+1
         i=1
         # print(sem_table_list[-1])
@@ -233,6 +234,10 @@ def generate_mtechphd_marksheet(transcript_data,rollno,name,yoa,programme,course
     pdf.y = 240
     pdf.image("SEAL.PNG",x = 80, y = 235, w = 35, h = 25)
 
+    pdf.line(10,140,200,140)
+    pdf.line(10,130+90,200,130+90)
+    # pdf.line(10,130+90+90,200,130+90+90)
+
     pdf.image("SIGNATURE.PNG",x = 150, y = 225, w = 35, h = 25)
 
     pdf.x = 150
@@ -256,14 +261,16 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
     pdf.y = top
     pdf.image("IITPLOGO2.PNG",x = xcoord+1, y = top+1, w = 275, h = 30)
     pdf.ln(30)
-
+    pdf.y = top
+    pdf.cell(280, 31, '', 1, 1, 'C')
     #----------------------------------------------------------#
     stud_info = [["Roll No: ",rollno,"Name: ",name, "Year of Admission: ",yoa], 
                 ["Programme: ",programme,"Course: ",course],"",""]
     line_height = 10
     pdf.x = 50
     top = pdf.y
-    pdf.cell(215, 21, '', 1, 1, 'C')
+    pdf.y=pdf.y+2
+    pdf.cell(215, 19, '', 1, 1, 'C')
     pdf.y = top
 
     for row in stud_info:
@@ -291,7 +298,7 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
     pdf.y = pdf.y-13
     ycoord = pdf.y
     offset = 8
-    offset_y = 100
+    offset_y = 96
     
     for key in transcript_data:
         if len(transcript_data[key]) ==0:
@@ -305,6 +312,8 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
             ycoord = pdf.y
             pdf.x = xcoord
             offset = 8
+            
+        
         sem_table_list.append(["","Sub Code","Subject Name","L-T-P","CRD","Sub Type","GRD"])
         for subject_wise_data in transcript_data[key]:
             sem_table_list.append(subject_wise_data)
@@ -313,7 +322,7 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
         pdf.x = pdf.x+offset
         pdf.set_font('Arial',"", 8)
         sem_name = "Semester "+str(key)
-        pdf.set_font('Arial', 'BU', 6)
+        pdf.set_font('Arial', 'BU', 8)
         pdf.cell(20, 10,sem_name, 0, 1, 'C')
         pdf.ln(1)
         row_no =1
@@ -328,20 +337,21 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
                 if i == 1:
                     cell_width = 13
                 if i == 2:
-                    cell_width = 40
+                    cell_width = 50
                 if i == 3:
                     cell_width = 9
                 if i == 4:
-                    cell_width = 9
+                    cell_width = 7
                 if i == 5:
-                    cell_width = 9
-                pdf.set_font('Arial', '', 6.5)
+                    cell_width = 7
+                pdf.set_font('Arial', '', 6)
                 if row_no == 1:
-                    pdf.set_font('Arial', 'B', 7)
-                pdf.multi_cell(cell_width, 7, datum, border=1,align='C', ln=3, max_line_height=pdf.font_size)
+                    pdf.set_font('Arial', 'B', 6)
+                pdf.multi_cell(cell_width, 5.5, datum, border=1,align='C', ln=3, max_line_height=pdf.font_size)
                 i=i+1
             row_no = row_no+1
-            pdf.ln(7)
+            pdf.ln(5.5)
+            
         i=1
         # print(sem_table_list[-1])
         pdf.x = pdf.x+offset
@@ -350,11 +360,16 @@ def generate_btech_marksheet(transcript_data,rollno,name,yoa,programme,course):
         overalldata = "Credits Taken: {creditstaken}     Credits Cleared: {creditscleared}   SPI: {spi}  CPI: {cpi}".format(creditstaken=sem_table_list[-1][1],creditscleared = sem_table_list[-1][3],spi=sem_table_list[-1][2],cpi=sem_table_list[-1][4] )
         pdf.cell(77, 8, overalldata, 1, 1, 'C')
         pdf.ln(line_height)
+
         
 
         pdf.y = ycoord
         offset = offset + 90
 
+
+    pdf.line(10,150,290,150)
+    pdf.line(10,150+100,290,150+100)
+    pdf.line(10,150+90+90,290,150+90+90)
 
     today = datetime.datetime.now()
     today = today.strftime("%d %b %Y, %H:%M")
@@ -424,7 +439,7 @@ else:
         print(roll)
         if(isBtech(roll)):
             # generate_mtechphd_marksheet(nestedDict['0401CS01'],'1901ME29','Jibanjyoti Kalita','2020','Master of Technology','Mechanical Engineering')
-            generate_btech_marksheet(nestedDict[roll],roll,nameRollMapping[roll],"20"+str(roll[:2]),'Bachelors of Technology',course_map[roll[4:6]])
+            generate_mtechphd_marksheet(nestedDict[roll],roll,nameRollMapping[roll],"20"+str(roll[:2]),'Bachelors of Technology',course_map[roll[4:6]])
         else:
             generate_mtechphd_marksheet(nestedDict[roll],roll,nameRollMapping[roll],"20"+str(roll[:2]),programme_map[roll[2:4]],course_map[roll[4:6]])
 
