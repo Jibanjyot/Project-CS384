@@ -5,8 +5,9 @@ from email.mime.base import MIMEBase
 from email import encoders
 import os
 
-def send_mail(roll,email):   
-    fromaddr = "darshilp326@gmail.com"
+def send_mail(roll,email):
+    #put the email id to be used   
+    fromaddr = "abcd@gmail.com"
     toaddr = email
     
     # instance of MIMEMultipart
@@ -18,10 +19,10 @@ def send_mail(roll,email):
     msg['To'] = toaddr
     
     # storing the subject 
-    msg['Subject'] = "Subject of the Mail"
+    msg['Subject'] = "CS384 MARKSHEET"
     
     # string to store the body of the mail
-    body = "Body_of_the_mail"
+    body = "Dear Student, \n Please find your marks. "
     
     # attach the body with the msg instance
     msg.attach(MIMEText(body, 'plain'))
@@ -29,6 +30,7 @@ def send_mail(roll,email):
     # open the file to be sent 
     filename = roll+'.xlsx'
     path='./marksheets/'+roll+'.xlsx'
+    # print(path)
     if(not os.path.exists(path)):
         return
     attachment = open(path, "rb")
@@ -54,7 +56,8 @@ def send_mail(roll,email):
     s.starttls()
     
     # Authentication
-    s.login(fromaddr, "")
+    #in place of abce put the password of email provided above
+    s.login(fromaddr, "abcd")
     
     # Converts the Multipart msg into a string
     text = msg.as_string()

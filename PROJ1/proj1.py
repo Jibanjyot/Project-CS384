@@ -10,7 +10,8 @@ import pandas as pd
 roll_email_mapping={}
 def getMailData():
     for roll,email in roll_email_mapping.items():
-        send_mail(roll,email)
+        for i in email:
+            send_mail(roll,i)
     return     
 def generateMarksheets(p_mark,n_mark):
 
@@ -19,6 +20,7 @@ def generateMarksheets(p_mark,n_mark):
         responses = csv.DictReader(roll_file)
         for row in responses:
             roll_name_mapping[row["roll"]] =row["name"]
+            
     # print(roll_name_mapping)
 
     with open('uploads/responses.csv') as response_file:
@@ -26,6 +28,7 @@ def generateMarksheets(p_mark,n_mark):
         response_master_list = []
         for row in responses:
             response_master_list.append(row)
+            roll_email_mapping[row[6]] = [row[1],row[4]]
         # print(response_master_list)
     
     concise_sheet_header = response_master_list[0][:6].copy()
@@ -223,13 +226,13 @@ def generateMarksheets(p_mark,n_mark):
 def generateconciseMarksheets(p_mark,n_mark):
 
     roll_name_mapping = {}
-    with open('sample_input/master_roll.csv') as roll_file:
+    with open('uploads/master_roll.csv') as roll_file:
         responses = csv.DictReader(roll_file)
         for row in responses:
             roll_name_mapping[row["roll"]] =row["name"]
     # print(roll_name_mapping)
 
-    with open('sample_input/responses.csv') as response_file:
+    with open('uploads/responses.csv') as response_file:
         responses = csv.reader(response_file)
         response_master_list = []
         for row in responses:
@@ -280,9 +283,19 @@ def generateconciseMarksheets(p_mark,n_mark):
         total_score = total_positive_marks-total_negative_marks
         # print(total_positive_marks)
         tot_marks = (len(master_answer_key)-7)*positive_marks
+        # if stud_detail[6] not in exist_roll_mapping:
+        #     print(stud_detail[6])
+
+
         temp_list = stud_detail.copy()
+        temp_list[2] = str(total_positive_marks)+"/"+str(tot_marks)
+        
         temp_list.insert(6,str(total_score)+"/"+str(tot_marks))
         temp_list.append([tot_correct,tot_wrong,tot_not_attempted])
+        if stud_detail[6] not in exist_roll_mapping:
+            temp_list[2] = "Absent"
+            temp_list[6] = "Absent"
+
         concise_sheet.append(temp_list)
         
         
@@ -305,4 +318,3 @@ def generateconciseMarksheets(p_mark,n_mark):
     return
 
 
-# generateMarksheets(5,1)

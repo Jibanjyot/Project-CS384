@@ -42,7 +42,7 @@ def generate_concise():
     return resp	
 
 @app.route('/file-upload', methods=['POST'])
-async def upload_file():
+def upload_file():
 	# check if the post request has the file part
 	if 'masterFile' not in request.files or 'responseFile' not in request.files:
 		resp = jsonify({'message' : 'No file part in the request'})
